@@ -15,17 +15,17 @@ import dto.SearchCriteriaDto;
 @Component
 public class ProductSpecification {
 
+	
 	public Specification<Product> getProducts(SearchCriteriaDto searchCriteria) {
-		return (root, query, criteriaBuilder) -> {
-			List<Predicate> predicates = new ArrayList<>();
-
-			if (searchCriteria.getSearch() != null) {
-				searchCriteria.getSearch().forEach(search -> {
-					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(search.getKey())),
-							"%" + search.getValue().toLowerCase() + "%"));
-				});
-			}
-
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();         
+            
+            if(searchCriteria.getSearch() != null) {
+                searchCriteria.getSearch().forEach(search -> {
+                	predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(search.getKey())), "%" + search.getValue().toLowerCase() + "%"));
+                });
+            }
+            
 //            UserRequest request;
 //            
 //            
@@ -42,8 +42,8 @@ public class ProductSpecification {
 //            if (request.getGender() != null && !request.getGender().isEmpty()) {
 //                predicates.add(criteriaBuilder.equal(root.get("gender"), request.getGender()));
 //            }
-			query.orderBy(criteriaBuilder.desc(root.get(searchCriteria.getSort())));
-			return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            query.orderBy(criteriaBuilder.desc(root.get(searchCriteria.getSort())));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 		};
 	}
 }
